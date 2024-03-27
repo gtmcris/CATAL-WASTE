@@ -23,6 +23,15 @@ class _LoadUserDataState extends State<LoadUserData> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.user == null) {
+      // Handle case where user is null
+      return Center(
+        child: Text(
+          'User not authenticated',
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+    }
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
           .collection('UserAddress')

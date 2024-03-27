@@ -39,7 +39,17 @@ class _UserScheduleState extends State<UserSchedule> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 21, 24, 29),
-      appBar: AppBar(title: Text("Select Schedule")),
+      appBar: AppBar(
+        actionsIconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(
+          color: Colors.white, // Change this color to the desired color
+        ), // Set background color
+        backgroundColor: Color.fromARGB(255, 21, 24, 29),
+        title: Text(
+          'Select Schedule',
+          style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+        ),
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,29 +102,47 @@ class _UserScheduleState extends State<UserSchedule> {
           SizedBox(
               height:
                   16.0), // Add spacing between the categories and the Submit button
-          ElevatedButton(
-            onPressed: () {
-              // Handle Submit action
-              // For example, you can print the selected categories
-              print(addressItem);
-              if (addressItem.isNotEmpty && selectedCategories.isNotEmpty) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        CategoryQuantity(selectedCategories, addressItem),
-                  ),
-                );
-                print(selectedCategories);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          Container(
+            padding: EdgeInsets.only(bottom: 20),
+            child: ElevatedButton(
+              onPressed: () {
+                // Handle Submit action
+                // For example, you can print the selected categories
+                print(addressItem);
+                if (addressItem.isNotEmpty && selectedCategories.isNotEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          CategoryQuantity(selectedCategories, addressItem),
+                    ),
+                  );
+                  print(selectedCategories);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(
                       'Please Select an address and a waste category',
                     ),
-                    backgroundColor: Colors.deepPurple));
-              }
-            },
-            child: Text('CONFIRM'),
+                    backgroundColor: Colors.deepPurple,
+                  ));
+                }
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  Color.fromARGB(255, 252, 255, 228), // Background color
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: 15), // Adjust vertical padding
+                child: Text(
+                  'CONFIRM',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 22, 14, 47), // Change font color
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

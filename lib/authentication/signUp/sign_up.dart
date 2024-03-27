@@ -16,14 +16,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _emailTextController = TextEditingController();
   TextEditingController _userNameTextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
   void signUp(formKey) async {
     if (await formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true; // Set loading state to true when sign-up begins
+      });
       await AuthServices.signupUser(
         _emailTextController.text,
         _passwordTextController.text,
         _userNameTextController.text,
         context,
       );
+      setState(() {
+        _isLoading = false; // Set loading state to false when sign-up finishes
+      });
     }
   }
 
@@ -45,7 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 217, 231, 255)),
+                color: Color.fromARGB(255, 255, 255, 255)),
           ),
         ),
         body: Container(
@@ -84,18 +92,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     firebaseUIButton(
                         context,
                         "Sign Up",
+                        _isLoading,
                         () => {
-                              // FirebaseAuth.instance
-                              //     .createUserWithEmailAndPassword(
-                              //         email: _emailTextController.text,
-                              //         password: _passwordTextController.text)
-                              //     .then((value) {
-                              //   Navigator.of(context).pushReplacement(
-                              //       MaterialPageRoute(
-                              //           builder: (ctx2) => SignInScreen()));
-                              // }).onError((error, stackTrace) {
-                              //   print("Error ${error.toString()}");
-                              // }),
                               signUp(_formKey),
                             }),
                     navigateToSignUp("Sign In", false, context)

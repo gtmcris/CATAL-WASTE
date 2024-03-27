@@ -133,6 +133,7 @@ class _ProfileSectionState extends State<UserProfile> {
                   fontSize: 16,
                   color: Color.fromARGB(255, 19, 11, 61),
                 ),
+                
               ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,7 +209,12 @@ class _ProfileSectionState extends State<UserProfile> {
             onPressed: _logOut,
             child: Text('Log Out'),
             style: ElevatedButton.styleFrom(
-              minimumSize: Size(60, 50),
+              minimumSize:
+                  Size(100, 40), // Adjust the width and height as needed
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                    20), // Adjust the border radius for roundness
+              ),
             ),
           ),
           SizedBox(height: 20),
@@ -272,12 +278,20 @@ class _ProfileSectionState extends State<UserProfile> {
 
   void _logOut() async {
     await FirebaseAuth.instance.signOut();
+    final isMounted =
+        mounted; // Check if the widget is mounted before calling setState()
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (_) => ModuleChoice()),
       (route) => false,
     );
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('User has been logged out successfully!'),
-        backgroundColor: Colors.deepPurple));
+    if (isMounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('User has been logged out successfully!'),
+          backgroundColor: Colors.deepPurple,
+        ),
+      );
+    }
   }
+
 }

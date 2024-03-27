@@ -13,9 +13,13 @@ class _PhoneLoginScreenState extends State<OrgLoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String verificationId = '';
+  bool _isLoading = false; // Loading state variable
 
   Future<void> _verifyPhoneNumber(String phoneNumber) async {
     try {
+      setState(() {
+        _isLoading = true; // Set loading state to true
+      });
       await _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
@@ -31,6 +35,7 @@ class _PhoneLoginScreenState extends State<OrgLoginScreen> {
         codeSent: (String verificationId, int? resendToken) {
           setState(() {
             this.verificationId = verificationId;
+            _isLoading = false; // Set loading state to false
           });
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => OtpScreen(verificationId: verificationId),
@@ -38,7 +43,9 @@ class _PhoneLoginScreenState extends State<OrgLoginScreen> {
           // Handle code sent (OTP) - You might want to navigate to OTP verification screen
         },
         codeAutoRetrievalTimeout: (String verificationId) {
-          // Handle timeout
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Please Check the Network Connection'),
+              backgroundColor: Colors.deepPurple));
         },
       );
     } catch (e) {
@@ -53,7 +60,18 @@ class _PhoneLoginScreenState extends State<OrgLoginScreen> {
       child: Scaffold(
         backgroundColor: Color.fromARGB(255, 21, 24, 29),
         appBar: AppBar(
-          title: Text('Phone Number Login'),
+          actions: [], // Add this line or provide actions
+          actionsIconTheme: IconThemeData(color: Colors.white),
+          iconTheme: IconThemeData(
+            color: Colors.white, // Change this color to the desired color
+          ),
+          title: const Text(
+            'Phone Number Login',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          backgroundColor: Color.fromARGB(255, 21, 24, 29),
         ),
         body: Center(
           child: Padding(
@@ -78,7 +96,12 @@ class _PhoneLoginScreenState extends State<OrgLoginScreen> {
                         _verifyPhoneNumber(_phoneNumberController.text);
                       }
                     },
-                    child: Text('VERIFY'),
+                    child: _isLoading
+                        ? CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.black), // Set color to white
+                          )
+                        : Text('VERIFY'),
                   ),
                 ],
               ),
@@ -90,25 +113,24 @@ class _PhoneLoginScreenState extends State<OrgLoginScreen> {
   }
 }
 
-TextFormField reusablePhoneField(
-    String text, TextEditingController controller) {
+Widget reusablePhoneField(String text, TextEditingController controller) {
   return TextFormField(
     controller: controller,
     cursorColor: Colors.white,
-    style: TextStyle(color: Colors.white.withOpacity(0.9)),
+    style: TextStyle(color: Colors.white),
     decoration: InputDecoration(
       prefixIcon: Icon(
         Icons.phone,
         color: Colors.white70,
       ),
       labelText: text,
-      labelStyle: TextStyle(color: Colors.white.withOpacity(0.9)),
+      labelStyle: TextStyle(color: Colors.white),
       filled: true,
       floatingLabelBehavior: FloatingLabelBehavior.never,
       fillColor: Colors.white.withOpacity(0.3),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30.0),
-        borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+        borderSide: BorderSide.none,
       ),
     ),
     keyboardType: TextInputType.phone,

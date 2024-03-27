@@ -13,7 +13,7 @@
     </queries>
 
     <application
-        android:label="login"
+        android:label="Catalyze"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -15,33 +15,41 @@ class LoginScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   void signIn(formKey) async {
     if (await formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
       await AuthServices.signinUser(
           _emailController.text, _passwordController.text, context);
+      setState(() {
+        _isLoading = false;
+      });
     }
-    // try {
-    //   String email = emailController.text;
-    //   String password = passwordController.text;
-
-    //   // Store the context in a local variable
-    //   BuildContext localContext = context;
-
-    // Sign in with email and password
-    // await _auth.signInWithEmailAndPassword(
-    //   email: email,
-    //   password: password,
-    // );
-
-    // If successful, navigate to HomeScreen using the local context
-    //   Navigator.push(
-    //       localContext, MaterialPageRoute(builder: (_) => ScreenHome()));
-    // } catch (e) {
-    //   // Handle sign-in errors
-    //   print('Error signing in: $e');
-    // }
   }
+
+  // try {
+  //   String email = emailController.text;
+  //   String password = passwordController.text;
+
+  //   // Store the context in a local variable
+  //   BuildContext localContext = context;
+
+  // Sign in with email and password
+  // await _auth.signInWithEmailAndPassword(
+  //   email: email,
+  //   password: password,
+  // );
+
+  // If successful, navigate to HomeScreen using the local context
+  //   Navigator.push(
+  //       localContext, MaterialPageRoute(builder: (_) => ScreenHome()));
+  // } catch (e) {
+  //   // Handle sign-in errors
+  //   print('Error signing in: $e');
+  // }
 
   Widget handleForgotPassword(BuildContext context) {
     return Container(
@@ -106,8 +114,8 @@ class LoginScreenState extends State<SignInScreen> {
                           height: 5,
                         ),
                         handleForgotPassword(context),
-                        firebaseUIButton(
-                            context, "Sign In", () => signIn(_formKey)),
+                        firebaseUIButton(context, "Sign In", _isLoading,
+                            () => signIn(_formKey)),
                         navigateToSignUp("Sign Up", true, context),
 
                         // forgetPassword(context),

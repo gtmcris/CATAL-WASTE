@@ -170,21 +170,26 @@ Container signInSignUpButton(
   ); // Container
 }
 
-Container firebaseUIButton(BuildContext context, String title, Function onTap) {
+Container firebaseUIButton(
+    BuildContext context, String title, bool isLoading, Function onTap) {
   return Container(
     width: MediaQuery.of(context).size.width,
     height: 50,
     margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(90)),
     child: ElevatedButton(
-      onPressed: () async {
-        await onTap();
-      },
-      child: Text(
-        title,
-        style: const TextStyle(
-            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
-      ),
+      onPressed: isLoading ? null : () async => onTap(),
+      child: isLoading
+          ? CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+            )
+          : Text(
+              title,
+              style: const TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16),
+            ),
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.pressed)) {
@@ -202,7 +207,7 @@ Row navigateToSignUp(String val, bool isSignUp, BuildContext context) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Text(isSignUp ? "Don't have an account? " : "Already have an Account ",
+      Text(isSignUp ? "Don't have Account " : "Already have an Account ",
           style: const TextStyle(color: Colors.white70)),
       GestureDetector(
         onTap: isSignUp
@@ -235,4 +240,4 @@ Row navigateToSignUp(String val, bool isSignUp, BuildContext context) {
 //       color: Colors.blue,
 //       textColor: Colors.white,
 //       child: Text("Login"));
-// }
+// }

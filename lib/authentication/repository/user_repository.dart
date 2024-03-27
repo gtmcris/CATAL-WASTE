@@ -56,7 +56,7 @@ class AuthServices {
       print(e.toString());
 
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Invalid credentials'),
+          content: Text('Unable to establish connection to your database'),
           backgroundColor: Colors.deepPurple));
     } catch (e) {
       // Handle other exceptions (if needed)
